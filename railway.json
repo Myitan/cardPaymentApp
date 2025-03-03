@@ -1,0 +1,7 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd backend && mvn clean package -DskipTests && cd ../frontend && npm install && npm run build"
+startCommand = "java -jar backend/target/*.jar"
+
+[deploy]
+autoRetry = true
