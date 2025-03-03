@@ -1,16 +1,25 @@
 [phases.setup]
 cmds = [
-    "echo 'Installing Java 17...'",
-    "nix-env -iA nixpkgs.jdk17",
-    "echo 'Installing Node.js...'",
-    "nix-env -iA nixpkgs.nodejs-18_x"
+    # Install Java and Node.js using Nix packages
+    "nix-env -iA nixpkgs.jdk17 nixpkgs.nodejs-18_x nixpkgs.maven",
+    "corepack enable" # For pnpm/npm/yarn
 ]
 
 [phases.build]
 cmds = [
+    # Build backend
     "cd backend && mvn clean package -DskipTests",
+
+    # Build frontend
     "cd ../frontend && npm install && npm run build"
 ]
 
 [phases.start]
 cmd = "java -jar backend/target/*.jar"
+
+[phases.install]
+cmds = [
+    # Needed for Railway's filesystem
+    "mkdir -p /app/backend/target",
+    "mkdir -p /app/frontend/dist"
+]
